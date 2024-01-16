@@ -21,9 +21,12 @@ export default function CollectUpdateTodo({ route }) {
     }
 
     const payload = {
-      uuid: route.params.uuid,
-      title: title,
-      description: description,
+      todo: {
+        uuid: route.params.uuid,
+        title: title,
+        description: description,
+      },
+      reverse: false,
     };
 
     dispatch({ type: TODOACTIONS.UPDATE, payload: payload });
@@ -31,7 +34,9 @@ export default function CollectUpdateTodo({ route }) {
 
   return (
     <View>
-      {notification && <MyAlert message={notification} type={ALERT_TYPES.DANGER} />}
+      {notification && (
+        <MyAlert message={notification} type={ALERT_TYPES.DANGER} />
+      )}
       <InputField
         placeholder="Title"
         defaultValue={title}

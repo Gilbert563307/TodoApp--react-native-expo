@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useTodosControllerContext } from "../controller/TodosController";
+import { ALERT_TYPES } from "../view/components/MyAlert";
 
 export default function useCustomCollectTodosHook() {
   const [todos, setTodos] = useState([]);
   const [notification, setNotification] = useState(null);
   const { state } = useTodosControllerContext();
+
+  const closeAlert = () => {
+    setNotification(null);
+  };
 
   useEffect(() => {
     const retrieveTodos = async () => {
@@ -21,12 +26,15 @@ export default function useCustomCollectTodosHook() {
         }
       } catch (error) {
         console.error("Error retrieving todos:", error);
-        setMessage(`Error retrieving todos, ${error.message}}`);
+        setNotification({
+          message: `Error retrieving todos, ${error.message}`,
+          type: ALERT_TYPES.DANGER,
+        });
       }
     };
 
     retrieveTodos();
   }, [state]);
 
-  return { todos, notification };
+  return { todos, notification, closeAlert };
 }

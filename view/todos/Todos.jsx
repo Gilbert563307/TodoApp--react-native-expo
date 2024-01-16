@@ -55,8 +55,10 @@ export default function Todos({ todos = [] }) {
 
   const completeTodo = (todo) => {
     const payload = {
-      ...todo,
-      completed: true,
+      todo: {
+        ...todo,
+        completed: true,
+      }
     };
     dispatch({ type: TODOACTIONS.UPDATE, payload: payload });
   };

@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { styles } from "../../assets/css/Alert";
+import { TouchableOpacity } from "react-native";
+import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export const ALERT_TYPES = {
   INFO: 0,
@@ -8,7 +10,11 @@ export const ALERT_TYPES = {
   SUCCESS: 2,
 };
 
-export default function MyAlert({ message, type = ALERT_TYPES.INFO }) {
+export default function MyAlert({
+  message,
+  type = ALERT_TYPES.INFO,
+  closeAlert,
+}) {
   const getAlertType = (type) => {
     switch (type) {
       case ALERT_TYPES.INFO:
@@ -25,11 +31,15 @@ export default function MyAlert({ message, type = ALERT_TYPES.INFO }) {
     }
   };
   const classToSet = getAlertType(type);
+
   return (
     <View>
       {message && (
         <View style={[styles.alert, classToSet]}>
           <Text style={styles.alertText}>{message} </Text>
+          <TouchableOpacity onPress={closeAlert}>
+            <MaterialIcon name="close" size={28} color="grey" />
+          </TouchableOpacity>
         </View>
       )}
     </View>

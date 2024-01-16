@@ -24,11 +24,9 @@ export default function TodosController({ children }) {
   const navigation = useNavigation();
   const { getAllTodos, createTodo, updateTodo, deleteTodo } = TodosLogic();
 
-  const collectListTodos = async (filter = null) => {
-    const todos = await getAllTodos();
-    if (!filter) return todos;
-    const filteredTodos = todos.todos.filter((todo) => todo.completed === true);
-    return { todos: filteredTodos, message: todos.message, };
+  const collectListTodos = async (filter = null, reverse = true) => {
+    const todos = await getAllTodos(filter, reverse);
+    return todos;
   };
 
   const collectCreateTodo = async (todo) => {
@@ -50,29 +48,32 @@ export default function TodosController({ children }) {
     switch (action.type) {
       case TODOACTIONS.LIST:
         navigation.navigate("CollectListTodos");
-        const list = await collectListTodos(action.payload);
+        const list = await collectListTodos(action.payload, true);
         return {
           ...state,
           todos: list.todos,
-          notification: {message: list.message, type: list?.type},
+          notification: { message: list.message, type: list?.type },
         };
       case TODOACTIONS.CREATE:
         navigation.navigate("CollectListTodos");
         const created = await collectCreateTodo(action.payload);
-        const todos = await collectListTodos();
+        const todos = await collectListTodos(null, true);
         return {
           ...state,
-          notification: {message: created?.message, type: created?.type},
+          notification: { message: created?.message, type: created?.type },
           todos: todos.todos,
         };
 
       case TODOACTIONS.UPDATE:
         navigation.navigate("CollectListTodos");
-        const updated = await CollectUpdateTodo(action.payload);
-        const updatedTodos = await collectListTodos();
+        const updated = await CollectUpdateTodo(action.payload.todo);
+        const updatedTodos = await collectListTodos(
+          null,
+          action.payload?.reverse
+        );
         return {
           ...state,
-          notification: {message: updated?.message, type: updated?.type},
+          notification: { message: updated?.message, type: updated?.type },
           todos: updatedTodos.todos,
         };
 
@@ -82,7 +83,7 @@ export default function TodosController({ children }) {
         const newTodos = await collectListTodos();
         return {
           ...state,
-          notification: {message: deleted.message, type: deleted?.type},
+          notification: { message: deleted.message, type: deleted?.type },
           todos: newTodos.todos,
         };
 

@@ -9,15 +9,15 @@ import useCustomCollectTodosHook from "../../customhooks/useCustomCollectTodosHo
 import MyAlert, { ALERT_TYPES } from "../components/MyAlert";
 
 export default function CollectListTodos({ navigation }) {
-  const { todos, notification } = useCustomCollectTodosHook();
+  const { todos, notification, closeAlert } = useCustomCollectTodosHook();
 
   const createTodo = () => {
     navigation.navigate("CollectCreateTodo");
   };
 
-  useEffect(() => {
-    console.log(`CollectListTodos`, notification);
-  }, []);
+  // useEffect(() => {
+  //   console.log(`CollectListTodos`, notification);
+  // }, []);
 
   return (
     <SafeAreaView style={styles.body}>
@@ -29,7 +29,7 @@ export default function CollectListTodos({ navigation }) {
       </View>
 
       {notification && (
-        <MyAlert message={notification?.message} type={notification?.type} />
+        <MyAlert message={notification?.message} type={notification?.type} closeAlert={closeAlert} />
       )}
 
       <Todos todos={todos} />

@@ -9,10 +9,25 @@ const TODOLOGICKYES = {
 export default function TodosLogic() {
   const { readData, getRandomUuid, createData, updateData } = DataHandler();
 
-  const getAllTodos = async () => {
+  const getAllTodos = async (filter, reverse) => {
     try {
+      console.log(`getAllTodos`, "filter:", filter, "reverse:", reverse);
       const todos = await readData(TODOLOGICKYES.ALL_TODOS);
-      const data = todos != null ? JSON.parse(todos).reverse() : [];
+      let data;
+
+      if (todos && reverse) {
+        data = JSON.parse(todos).reverse();
+      } else {
+        data = JSON.parse(todos);
+      }
+
+      if (todos && filter) {
+        console.log(`filter yeah yeah`);
+        const parsedData = JSON.parse(todos);
+        data = parsedData.filter((todo) => todo.completed === true);
+      }
+
+      //const data = todos != null ? JSON.parse(todos).reverse() : [];
       return { message: "", todos: data, type: null };
     } catch (error) {
       return { message: error.message, todos: [] };

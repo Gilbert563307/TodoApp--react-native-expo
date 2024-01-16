@@ -2,24 +2,32 @@ import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { View, Text, StyleSheet } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import {
+  TODOACTIONS,
+  useTodosControllerContext,
+} from "../../controller/TodosController";
 
 export default function BottomNavigation() {
+  const { dispatch } = useTodosControllerContext();
   const [selectedTab, setSelectedTab] = useState(0);
   const tabs = [
     {
       name: "All",
       url: "",
       icon: { name: "list", size: 30 },
+      filter: undefined,
     },
     {
       name: "Completed",
       url: "",
       icon: { name: "check", size: 30 },
+      filter: { completed: true },
     },
   ];
 
-  const handleUrlRequest = (selectedTab, url) => {
+  const handleUrlRequest = (selectedTab, tab) => {
     setSelectedTab(selectedTab);
+    dispatch({ type: TODOACTIONS.LIST, payload: tab.filter });
   };
 
   const styles = StyleSheet.create({
@@ -29,7 +37,7 @@ export default function BottomNavigation() {
       left: 0,
       right: 0,
       padding: 15,
-      height: 100,
+      height: 90,
       backgroundColor: "#FFFFFF",
     },
     tabs: {
@@ -51,7 +59,7 @@ export default function BottomNavigation() {
             <TouchableOpacity
               key={index}
               style={[styles.tab]}
-              onPress={() => handleUrlRequest(index, tab.url)}
+              onPress={() => handleUrlRequest(index, tab)}
             >
               <FeatherIcon
                 name={tab.icon.name}

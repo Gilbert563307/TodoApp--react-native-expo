@@ -31,7 +31,17 @@ export default function DataHandler() {
 
   const deleteData = () => {};
 
-  const updateData = () => {};
+  const updateData = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      return true;
+    } catch (e) {
+      console.log(
+        `updateData: failed updating data key:${key} value:${key}, error:${e} `
+      );
+      return false;
+    }
+  };
 
   const getRandomUuid = () => {
     return uuid.v4();

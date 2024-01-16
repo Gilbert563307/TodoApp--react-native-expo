@@ -1,18 +1,19 @@
 import React from "react";
 import DataHandler from "./DataHandler";
+import { ALERT_TYPES } from "../view/components/MyAlert";
 
 const TODOLOGICKYES = {
   ALL_TODOS: "LIST",
 };
 
 export default function TodosLogic() {
-  const { readData, getRandomUuid, createData } = DataHandler();
+  const { readData, getRandomUuid, createData, updateData } = DataHandler();
 
   const getAllTodos = async () => {
     try {
       const todos = await readData(TODOLOGICKYES.ALL_TODOS);
       const data = todos != null ? JSON.parse(todos).reverse() : [];
-      return { message: "", todos: data };
+      return { message: "", todos: data, type: null };
     } catch (error) {
       return { message: error.message, todos: [] };
     }
@@ -82,14 +83,79 @@ export default function TodosLogic() {
           ? "Your todo has been created"
           : "Something went wrong",
         created: created,
+        type: created ? ALERT_TYPES.SUCCESS : ALERT_TYPES.DANGER,
       };
     } catch (error) {
-      return { message: error.message, created: false };
+      return {
+        message: error.message,
+        created: false,
+        type: ALERT_TYPES.DANGER,
+      };
+    }
+  };
+
+  const updateTodo = async (todo) => {
+    try {
+      const todosData = await getAllTodos();
+      const todos = todosData.todos;
+
+      const updatedTodos = todos.map((tbuTodo) => {
+        return tbuTodo.uuid === todo.uuid ? todo : tbuTodo;
+      });
+
+      const updated = await updateData(
+        TODOLOGICKYES.ALL_TODOS,
+        JSON.stringify(updatedTodos)
+      );
+
+      return {
+        message: updated
+          ? "Your todo has been updated"
+          : "Something went wrong",
+        updated: updated,
+        type: updated ? ALERT_TYPES.SUCCESS : ALERT_TYPES.DANGER,
+      };
+    } catch (error) {
+      return {
+        message: error.message,
+        updated: false,
+        type: ALERT_TYPES.DANGER,
+      };
+    }
+  };
+
+  const deleteTodo = async (todo) => {
+    try {
+      const todosData = await getAllTodos();
+      const todos = todosData.todos;
+
+      const updatedTodos = todos.filter((tbuTodo) => tbuTodo.uuid != todo.uuid);
+
+      const deleted = await updateData(
+        TODOLOGICKYES.ALL_TODOS,
+        JSON.stringify(updatedTodos)
+      );
+
+      return {
+        message: deleted
+          ? "Your todo has been deleted"
+          : "Something went wrong",
+        deleted: deleted,
+        type: deleted ? ALERT_TYPES.SUCCESS : ALERT_TYPES.DANGER,
+      };
+    } catch (error) {
+      return {
+        message: error.message,
+        deleted: false,
+        type: ALERT_TYPES.DANGER,
+      };
     }
   };
 
   return {
     getAllTodos,
     createTodo,
+    updateTodo,
+    deleteTodo,
   };
 }

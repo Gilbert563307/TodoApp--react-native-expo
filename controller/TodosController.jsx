@@ -1,27 +1,34 @@
 import React, { createContext, useReducer, useContext } from "react";
 import TodosLogic from "../model/TodosLogic";
 import { useNavigation } from "@react-navigation/native";
+import { ALERT_TYPES } from "../view/components/MyAlert";
 
 const TodosContext = createContext();
 
 const initialState = {
-  todo: {},
   todos: [],
-  message: "",
+  notification: {
+    message: "",
+    type: null,
+  },
 };
 
 export const TODOACTIONS = {
   LIST: "LIST_TODOS",
   CREATE: "CREATE_TODO",
+  UPDATE: "UPDATE_TODO",
+  DELETE: "DELETE_TODO",
 };
 
 export default function TodosController({ children }) {
   const navigation = useNavigation();
-  const { getAllTodos, createTodo } = TodosLogic();
+  const { getAllTodos, createTodo, updateTodo, deleteTodo } = TodosLogic();
 
-  const collectListTodos = () => {
-    const todos = getAllTodos();
-    return todos;
+  const collectListTodos = async (filter = null) => {
+    const todos = await getAllTodos();
+    if (!filter) return todos;
+    const filteredTodos = todos.todos.filter((todo) => todo.completed === true);
+    return { todos: filteredTodos, message: todos.message, };
   };
 
   const collectCreateTodo = async (todo) => {
@@ -29,14 +36,25 @@ export default function TodosController({ children }) {
     return todoCreated;
   };
 
+  const CollectUpdateTodo = async (todo) => {
+    const updated = await updateTodo(todo);
+    return updated;
+  };
+
+  const collectDeleteTodo = async (todo) => {
+    const deleted = await deleteTodo(todo);
+    return deleted;
+  };
+
   const handleRequest = async (state, action) => {
     switch (action.type) {
       case TODOACTIONS.LIST:
-        const list = await collectListTodos();
+        navigation.navigate("CollectListTodos");
+        const list = await collectListTodos(action.payload);
         return {
           ...state,
           todos: list.todos,
-          message: list.message,
+          notification: {message: list.message, type: list?.type},
         };
       case TODOACTIONS.CREATE:
         navigation.navigate("CollectListTodos");
@@ -44,8 +62,28 @@ export default function TodosController({ children }) {
         const todos = await collectListTodos();
         return {
           ...state,
-          message: created?.message,
+          notification: {message: created?.message, type: created?.type},
           todos: todos.todos,
+        };
+
+      case TODOACTIONS.UPDATE:
+        navigation.navigate("CollectListTodos");
+        const updated = await CollectUpdateTodo(action.payload);
+        const updatedTodos = await collectListTodos();
+        return {
+          ...state,
+          notification: {message: updated?.message, type: updated?.type},
+          todos: updatedTodos.todos,
+        };
+
+      case TODOACTIONS.DELETE:
+        navigation.navigate("CollectListTodos");
+        const deleted = await collectDeleteTodo(action.payload);
+        const newTodos = await collectListTodos();
+        return {
+          ...state,
+          notification: {message: deleted.message, type: deleted?.type},
+          todos: newTodos.todos,
         };
 
       default:

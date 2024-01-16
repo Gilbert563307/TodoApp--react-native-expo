@@ -6,7 +6,16 @@ export const styles = StyleSheet.create({
         padding: 15,
         display: "flex",
         borderRadius: "5px",
+
+    },
+    info: {
+        backgroundColor: "rgb(204,229,255)",
+    },
+    danger: {
         backgroundColor: "rgb(248,215,218)"
+    },
+    success: {
+        backgroundColor: "rgb(212,237,218)",
     },
     alertText: {
         color: "#58151C",

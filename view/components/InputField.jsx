@@ -7,6 +7,7 @@ export default function InputField({
   textarea = false,
   numberOfLines = 0,
   onChangeFunction = null,
+  defaultValue=null,
 }) {
   return (
     <View>
@@ -19,6 +20,8 @@ export default function InputField({
             numberOfLines={numberOfLines}
             style={styles.textArea}
             onChangeText={onChangeFunction}
+            value={defaultValue}
+            // {value !=null ? value={value} : ""}
           />
         </View>
       ) : (
@@ -27,6 +30,7 @@ export default function InputField({
           <TextInput
             placeholder={placeholder}
             onChangeText={onChangeFunction}
+            value={defaultValue}
           />
         </View>
       )}

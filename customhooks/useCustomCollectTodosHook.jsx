@@ -3,7 +3,7 @@ import { useTodosControllerContext } from "../controller/TodosController";
 
 export default function useCustomCollectTodosHook() {
   const [todos, setTodos] = useState([]);
-  const [message, setMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
   const { state } = useTodosControllerContext();
 
   useEffect(() => {
@@ -13,11 +13,10 @@ export default function useCustomCollectTodosHook() {
           const handledState = await state;
           if (handledState.todos) {
             setTodos(handledState.todos);
-            console.log("State is changing", handledState.todos);
           }
 
-          if (handledState.message) {
-            setMessage(handledState.message);
+          if (handledState.notification) {
+            setNotification(handledState.notification);
           }
         }
       } catch (error) {
@@ -29,5 +28,5 @@ export default function useCustomCollectTodosHook() {
     retrieveTodos();
   }, [state]);
 
-  return { todos, message };
+  return { todos, notification };
 }

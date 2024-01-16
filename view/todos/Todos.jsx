@@ -66,7 +66,7 @@ export default function Todos({ todos = [] }) {
   const Item = ({ todo }) => (
     <View style={styles.todoItem}>
       <View style={styles.totoBody}>
-        <Text style={styles.title}>{todo.title}</Text>
+        <Text style={styles.title}>{setText(todo.title)}</Text>
         <Text style={styles.description}>{setText(todo.description)}</Text>
       </View>
 

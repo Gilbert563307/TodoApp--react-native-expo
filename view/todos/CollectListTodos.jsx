@@ -3,17 +3,17 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Text, TouchableOpacity, View } from "react-native";
 import { styles } from "../../assets/css/CollectListTodos";
 import { SafeAreaView } from "react-native";
-import Todos from "./Todos";
 import BottomNavigation from "../components/BottomNavigation";
+import Todos from "./Todos";
+import useCustomCollectTodosHook from "../../customhooks/useCustomCollectTodosHook";
+import MyAlert from "../components/MyAlert";
 
 export default function CollectListTodos({ navigation }) {
+  const { todos, message } = useCustomCollectTodosHook();
 
   const createTodo = () => {
     navigation.navigate("CollectCreateTodo");
-  }
-  useEffect(() => {
-    console.log(navigation);
-  }, []);
+  };
 
   return (
     <SafeAreaView style={styles.body}>
@@ -23,7 +23,9 @@ export default function CollectListTodos({ navigation }) {
           <Icon name="plus-circle" size={30} color="white"></Icon>
         </TouchableOpacity>
       </View>
-      <Todos todos={[]} />
+
+      {message && <MyAlert message={message} />}
+      <Todos todos={todos} />
       <BottomNavigation></BottomNavigation>
     </SafeAreaView>
   );

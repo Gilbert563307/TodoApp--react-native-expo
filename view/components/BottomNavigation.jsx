@@ -20,7 +20,6 @@ export default function BottomNavigation() {
 
   const handleUrlRequest = (selectedTab, url) => {
     setSelectedTab(selectedTab);
-    console.log(selectedTab);
   };
 
   const styles = StyleSheet.create({

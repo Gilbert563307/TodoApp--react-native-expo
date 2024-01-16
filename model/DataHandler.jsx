@@ -1,14 +1,13 @@
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import uuid from "react-native-uuid";
 
 export default function DataHandler() {
+  //AsyncStorage.clear();
   const createData = async (key, value) => {
     try {
-      const created = await AsyncStorage.setItem("my-key", value);
-      if (created != null) {
-        return created;
-      }
-      return false;
+      await AsyncStorage.setItem(key, value);
+      return true;
     } catch (e) {
       console.log(
         `createData: failed creating data key:${key} value:${key}, error:${e} `
@@ -34,10 +33,15 @@ export default function DataHandler() {
 
   const updateData = () => {};
 
+  const getRandomUuid = () => {
+    return uuid.v4();
+  };
+
   return {
     createData,
     readData,
     deleteData,
     updateData,
+    getRandomUuid,
   };
 }

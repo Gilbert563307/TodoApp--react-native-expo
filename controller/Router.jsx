@@ -1,6 +1,5 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
 import CollectListTodos from "../view/todos/CollectListTodos";
 import CollectCreateTodo from "../view/todos/CollectCreateTodo";
 
@@ -8,9 +7,9 @@ const Stack = createNativeStackNavigator();
 
 export default function Router() {
   return (
-    <Stack.Navigator initialRouteName="Todos">
+    <Stack.Navigator initialRouteName="CollectListTodos">
       <Stack.Screen
-        name="Todos's"
+        name="CollectListTodos"
         component={CollectListTodos}
         options={{
           headerShown: true,
@@ -30,7 +29,7 @@ export default function Router() {
             backgroundColor: "#9395D3",
           },
           headerTitleStyle: {
-            color: 'white',
+            color: "white",
           },
         }}
       />

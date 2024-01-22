@@ -43,9 +43,8 @@ export default function TodosLogic() {
         return true;
       }
 
-      const uuidExists = todos.filter((obj) => obj.uuid === uuid);
-
-      if (uuidExists.length === 0) {
+      const uuidAvailable = todos.filter((obj) => obj.uuid === uuid);
+      if (uuidAvailable.length === 0) {
         return true;
       } else {
         // Assuming you want to return false only if there is exactly one matching UUID

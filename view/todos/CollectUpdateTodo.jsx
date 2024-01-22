@@ -26,7 +26,7 @@ export default function CollectUpdateTodo({ route }) {
         title: title,
         description: description,
       },
-      reverse: false,
+      reverse: true,
     };
 
     dispatch({ type: TODOACTIONS.UPDATE, payload: payload });

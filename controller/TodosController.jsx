@@ -3,8 +3,10 @@ import TodosLogic from "../model/TodosLogic";
 import { useNavigation } from "@react-navigation/native";
 import { ALERT_TYPES } from "../view/components/MyAlert";
 
+//create the 
 const TodosContext = createContext();
 
+//initial state for the context
 const initialState = {
   todos: [],
   notification: {
@@ -13,6 +15,7 @@ const initialState = {
   },
 };
 
+//todo actions so that every Todos view van use this object to access the cases in a switch
 export const TODOACTIONS = {
   LIST: "LIST_TODOS",
   CREATE: "CREATE_TODO",
@@ -47,8 +50,12 @@ export default function TodosController({ children }) {
   const handleRequest = async (state, action) => {
     switch (action.type) {
       case TODOACTIONS.LIST:
+        //navigate to this view
         navigation.navigate("CollectListTodos");
+        //payload contains a filter to show completed or not completed todos, the true means to reverse the list or not
         const list = await collectListTodos(action.payload, true);
+
+        //... using the spread operator to update the state
         return {
           ...state,
           todos: list.todos,
@@ -57,6 +64,8 @@ export default function TodosController({ children }) {
       case TODOACTIONS.CREATE:
         navigation.navigate("CollectListTodos");
         const created = await collectCreateTodo(action.payload);
+
+        //do not filter the new list, and reverse the list so that recently created todo item comes up as first
         const todos = await collectListTodos(null, true);
         return {
           ...state,

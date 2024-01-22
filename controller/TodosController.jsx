@@ -62,11 +62,12 @@ export default function TodosController({ children }) {
           notification: { message: list.message, type: list?.type },
         };
       case TODOACTIONS.CREATE:
+        console.log("creating todo")
         navigation.navigate("CollectListTodos");
         const created = await collectCreateTodo(action.payload);
 
         //do not filter the new list, and reverse the list so that recently created todo item comes up as first
-        const todos = await collectListTodos(null, true);
+        const todos = await collectListTodos(false, true);
         return {
           ...state,
           notification: { message: created?.message, type: created?.type },
@@ -77,7 +78,7 @@ export default function TodosController({ children }) {
         navigation.navigate("CollectListTodos");
         const updated = await CollectUpdateTodo(action.payload.todo);
         const updatedTodos = await collectListTodos(
-          null,
+          false,
           action.payload?.reverse
         );
         return {
@@ -89,7 +90,7 @@ export default function TodosController({ children }) {
       case TODOACTIONS.DELETE:
         navigation.navigate("CollectListTodos");
         const deleted = await collectDeleteTodo(action.payload);
-        const newTodos = await collectListTodos();
+        const newTodos = await collectListTodos(false, true);
         return {
           ...state,
           notification: { message: deleted.message, type: deleted?.type },
@@ -102,7 +103,7 @@ export default function TodosController({ children }) {
   };
 
   const init = async (initialState) => {
-    const todos = await collectListTodos();
+    const todos = await collectListTodos(false, true);
     return { ...initialState, todos: todos.todos, message: todos.message };
   };
 

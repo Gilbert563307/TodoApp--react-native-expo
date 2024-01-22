@@ -34,15 +34,26 @@ export default function TodosLogic() {
     }
   };
 
+  const privateRequestTodos = async () => {
+    try {
+      const todos = await readData(TODOLOGICKYES.ALL_TODOS);
+      const data = todos != null ? JSON.parse(todos).reverse() : [];
+      return { message: "", todos: data, type: null };
+    } catch (error) {
+      return { message: error.message, todos: [] };
+    }
+  };
+
   const checkIfUuidIsAvailable = async (uuid) => {
     try {
-      const todosData = await getAllTodos();
+      const todosData = await privateRequestTodos();
       const todos = todosData.todos;
 
       if (todos && todos.length === 0) {
         return true;
       }
 
+      console.log(`checkIfUuidIsAvailable`, todos);
       const uuidAvailable = todos.filter((obj) => obj.uuid === uuid);
       if (uuidAvailable.length === 0) {
         return true;
@@ -77,7 +88,7 @@ export default function TodosLogic() {
 
   const createTodo = async (todo) => {
     try {
-      const todosData = await getAllTodos();
+      const todosData = await privateRequestTodos();
       const todos = todosData.todos;
 
       const uuid = await getAvailableUuid();
@@ -110,7 +121,7 @@ export default function TodosLogic() {
 
   const updateTodo = async (todo) => {
     try {
-      const todosData = await getAllTodos();
+      const todosData = await privateRequestTodos();
       const todos = todosData.todos;
 
       const updatedTodos = todos.map((tbuTodo) => {
@@ -140,7 +151,7 @@ export default function TodosLogic() {
 
   const deleteTodo = async (todo) => {
     try {
-      const todosData = await getAllTodos();
+      const todosData = await privateRequestTodos();
       const todos = todosData.todos;
 
       const updatedTodos = todos.filter((tbuTodo) => tbuTodo.uuid != todo.uuid);
